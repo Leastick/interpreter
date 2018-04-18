@@ -210,11 +210,52 @@ function enableTab(id) {
             this.value = val.substring(0, start) + '\t' + val.substring(end);
             this.selectionStart = this.selectionEnd = start + 1;
             return false;
-
         }
     };
 }
 
+
+function drawCircuit(canvasId) {
+    let current_canvas = document.getElementById(canvasId);
+    let contex = current_canvas.getContext("2d");
+    contex.moveTo(0, 0);
+    contex.strokeStyle = "#dcdcdc";
+    contex.lineWidth = 1;
+    const cell_side = 25;
+    for (let x = 0.5 + cell_side; x < current_canvas.width; x += cell_side) {
+        contex.moveTo(x, 0);
+        contex.lineTo(x, current_canvas.height);
+    }
+    for (let y = 0.5 + cell_side; y < current_canvas.height; y += cell_side) {
+        contex.moveTo(0, y);
+        contex.lineTo(current_canvas.width, y)
+    }
+    contex.stroke();
+    contex.beginPath();
+    const sx = 250;
+    const sy = 200;
+    const k = 5.08;
+    const k1 = 1.39;
+    contex.moveTo(sx - 6 * cell_side, sy);
+    contex.lineTo(sx + 6 * cell_side, sy);
+    contex.lineTo(sx + 3 * cell_side, sy + k * cell_side);
+    contex.lineTo(sx - 3 * cell_side, sy - k * cell_side);
+    contex.lineTo(sx + 3 * cell_side, sy - k * cell_side);
+    contex.lineTo(sx - 3 * cell_side, sy + k * cell_side);
+    contex.lineTo(sx - 6 * cell_side, sy);
+    contex.moveTo(sx, sy);
+    contex.lineTo(sx, sy + 12 * cell_side);
+    contex.moveTo(sx, sy + 8 * cell_side);
+    contex.lineTo(sx + k1 * cell_side, sy + (8 - k1) * cell_side);
+    contex.lineTo(sx + 2 * k1 * cell_side, sy + 8 * cell_side);
+    contex.lineTo(sx + k1 * cell_side, sy + (8 + k1) * cell_side);
+    contex.lineTo(sx, sy + 8 * cell_side);
+    contex.lineWidth = 2;
+    contex.setLineDash([5, 3]);
+    contex.strokeStyle = "#ff0702";
+    contex.stroke();
+    return cell_side
+}
 //program = "повтори 4\nначало\nвперед 1\nналево 90\nконец"
 //console.log program
 //process_program(program)

@@ -11,7 +11,11 @@
                 if (result[0] === false) {
                     alert(result[1])
                 } else {
+                    drawCircuit("field");
+                    let points = result[1];
+                    for (let i = 0; i < points.length; i++) {
 
+                    }
                 }
             });
         }).call(this);
@@ -32,6 +36,7 @@
             width: 100%;
         }
         textarea {
+            background: gainsboro;
             font-size: 20px;
             resize: none;
             margin-top: 1%;
@@ -49,7 +54,7 @@
         }
     </style>
 </head>
-<body bgcolor="#dcdcdc">
+<body>
 <p>
     <textarea id="program"></textarea>
     <canvas id="field" width="500" height="500" style="border:1px solid #000000;"></canvas>
