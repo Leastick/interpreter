@@ -7,15 +7,12 @@
         (function() {
             $(document).on('click', '#btn', function() {
                 let text = $('textarea#program').val();
-                let result = process_program(text);
+                let result = process_program(250, 200, 25, text);
                 if (result[0] === false) {
                     alert(result[1])
                 } else {
-                    drawCircuit("field");
                     let points = result[1];
-                    for (let i = 0; i < points.length; i++) {
-
-                    }
+                    drawCircuit("field", points);
                 }
             });
         }).call(this);
@@ -68,6 +65,9 @@
             $('program').val("")
         }
     }).call(this);
+</script>
+<script type="text/javascript">
+    drawCircuit("field", [new Point(250, 200)]);
 </script>
 <div class="submit_btn"><p>
     <input id="btn" value="Запустить" type="button">

@@ -87,9 +87,10 @@ Executor = class Executor {
 };
 
 ProgramHandler = class ProgramHandler {
-    constructor(x, y, program1) {
+    constructor(x, y, step1, program1) {
         this.program = program1;
         this.executor = new Executor(x, y);
+        this.step = step1
     }
 
     execute() {
@@ -111,9 +112,12 @@ ProgramHandler = class ProgramHandler {
                 stack.push(Math.max(value - 1, 0));
             }
             if (order === "f") {
-                this.executor.move(value);
+                this.executor.move(value * this.step);
             }
             if (order === "l") {
+                this.executor.rotate(-value);
+            }
+            if (order === "r") {
                 this.executor.rotate(value);
             }
             ip++;
@@ -187,12 +191,12 @@ DrawingFramework = class DrawingFramework {
 
 };
 
-process_program = function(program = null) {
+process_program = function(x, y, step, program = null) {
     var e, handler;
     try {
         program = program.split(/\n/);
         program = transform_program(program);
-        handler = new ProgramHandler(0, 0, program);
+        handler = new ProgramHandler(x, y, step, program);
         return [true, handler.execute()];
     } catch (error) {
         e = error;
@@ -215,13 +219,13 @@ function enableTab(id) {
 }
 
 
-function drawCircuit(canvasId) {
+function drawCircuit(canvasId, points, cell_side=25) {
     let current_canvas = document.getElementById(canvasId);
     let contex = current_canvas.getContext("2d");
+    contex.clearRect(0, 0, current_canvas.width, current_canvas.height);
     contex.moveTo(0, 0);
     contex.strokeStyle = "#dcdcdc";
     contex.lineWidth = 1;
-    const cell_side = 25;
     for (let x = 0.5 + cell_side; x < current_canvas.width; x += cell_side) {
         contex.moveTo(x, 0);
         contex.lineTo(x, current_canvas.height);
@@ -234,8 +238,8 @@ function drawCircuit(canvasId) {
     contex.beginPath();
     const sx = 250;
     const sy = 200;
-    const k = 5.08;
-    const k1 = 1.39;
+    const k = 5.18;
+    const k1 = 1.41;
     contex.moveTo(sx - 6 * cell_side, sy);
     contex.lineTo(sx + 6 * cell_side, sy);
     contex.lineTo(sx + 3 * cell_side, sy + k * cell_side);
@@ -254,12 +258,33 @@ function drawCircuit(canvasId) {
     contex.setLineDash([5, 3]);
     contex.strokeStyle = "#ff0702";
     contex.stroke();
-    return cell_side
+    contex.beginPath();
+    contex.strokeStyle = "#000000";
+    contex.setLineDash([1, 0]);
+    contex.lineWidth = 3;
+    contex.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+        console.log([points[i].x, points[i].y]);
+        contex.lineTo(points[i].x, points[i].y);
+    }
+    contex.stroke();
+    contex.beginPath();
+    contex.strokeStyle = "#3f8b2d";
+    contex.moveTo(points[points.length - 1].x, points[points.length - 1].y);
+    if (points.length === 1) {
+        let direction = new Point(-1, 0).normalize(3 * cell_side);
+        let arrow = points[points.length - 1].add(direction);
+        contex.lineTo(arrow.x, arrow.y);
+    } else {
+        let direction = points[points.length - 1].sub(points[points.length - 2]).normalize(3 * cell_side);
+        let arrow = points[points.length - 1].add(direction);
+        contex.lineTo(arrow.x, arrow.y);
+    }
+    contex.stroke();
+    contex.beginPath();
+    contex.strokeStyle = "#1f5713";
+    contex.fillStyle = "#249f24";
+    contex.arc(points[points.length - 1].x, points[points.length - 1].y, 10, 0, 2 * Math.PI);
+    contex.fill();
+    contex.stroke();
 }
-//program = "повтори 4\nначало\nвперед 1\nналево 90\nконец"
-//console.log program
-//process_program(program)
-
-
-
-//# sourceMappingURL=main.js.map
