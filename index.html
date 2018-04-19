@@ -2,7 +2,7 @@
 <html>
 <head>
     <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script src="js/scripts.js"></script>
+    <script src="js/scripts.js?4"></script>
     <script type="text/javascript">
         (function() {
             $(document).on('click', '#btn', function() {
@@ -67,7 +67,7 @@
     }).call(this);
 </script>
 <script type="text/javascript">
-    drawCircuit("field", [new Point(250, 200)]);
+    drawCircuit("field", new Executor(250, 200));
 </script>
 <div class="submit_btn"><p>
     <input id="btn" value="Запустить" type="button">

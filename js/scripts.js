@@ -122,7 +122,7 @@ ProgramHandler = class ProgramHandler {
             }
             ip++;
         }
-        return this.executor.positions;
+        return this.executor;
     }
 
 };
@@ -147,7 +147,7 @@ transform_program = function(original_program) {
     cycle_just_started = false;
     for (index = i = 0, len1 = original_program.length; i < len1; index = ++i) {
         line = original_program[index];
-        if (line === '') {
+        if (line.trim() === '') {
             continue;
         }
         if (cycle_just_started) {
@@ -219,7 +219,7 @@ function enableTab(id) {
 }
 
 
-function drawCircuit(canvasId, points, cell_side=25) {
+function drawCircuit(canvasId, executor, cell_side=25) {
     let current_canvas = document.getElementById(canvasId);
     let contex = current_canvas.getContext("2d");
     contex.clearRect(0, 0, current_canvas.width, current_canvas.height);
@@ -262,6 +262,7 @@ function drawCircuit(canvasId, points, cell_side=25) {
     contex.strokeStyle = "#000000";
     contex.setLineDash([1, 0]);
     contex.lineWidth = 3;
+    var points = executor.positions;
     contex.moveTo(points[0].x, points[0].y);
     for (let i = 1; i < points.length; i++) {
         console.log([points[i].x, points[i].y]);
@@ -271,15 +272,17 @@ function drawCircuit(canvasId, points, cell_side=25) {
     contex.beginPath();
     contex.strokeStyle = "#3f8b2d";
     contex.moveTo(points[points.length - 1].x, points[points.length - 1].y);
-    if (points.length === 1) {
-        let direction = new Point(-1, 0).normalize(3 * cell_side);
-        let arrow = points[points.length - 1].add(direction);
-        contex.lineTo(arrow.x, arrow.y);
-    } else {
-        let direction = points[points.length - 1].sub(points[points.length - 2]).normalize(3 * cell_side);
-        let arrow = points[points.length - 1].add(direction);
-        contex.lineTo(arrow.x, arrow.y);
-    }
+    let arrow = executor.position.add(executor.direction.normalize(3 * cell_side));
+    let part = executor.position.add(executor.direction.normalize(2.6 * cell_side));
+    let directing_vector = executor.direction.normalize(0.3 * cell_side).rotate(90);
+    let left = part.add(directing_vector);
+    let right = part.sub(directing_vector);
+    //let left = part.add(executor.direction.rotate(90).normalize(0.5 * cell_side));
+    //alert('kek1');
+    contex.lineTo(arrow.x, arrow.y);
+    contex.lineTo(left.x, left.y);
+    contex.moveTo(arrow.x, arrow.y);
+    contex.lineTo(right.x, right.y);
     contex.stroke();
     contex.beginPath();
     contex.strokeStyle = "#1f5713";
