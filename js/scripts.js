@@ -261,7 +261,7 @@ function drawCircuit(canvasId, executor, cell_side=25) {
     contex.beginPath();
     contex.strokeStyle = "#000000";
     contex.setLineDash([1, 0]);
-    contex.lineWidth = 3;
+    contex.lineWidth = 4;
     var points = executor.positions;
     contex.moveTo(points[0].x, points[0].y);
     for (let i = 1; i < points.length; i++) {
@@ -270,7 +270,8 @@ function drawCircuit(canvasId, executor, cell_side=25) {
     }
     contex.stroke();
     contex.beginPath();
-    contex.strokeStyle = "#3f8b2d";
+    contex.lineWidth = 2;
+    contex.strokeStyle = "#12c3be";
     contex.moveTo(points[points.length - 1].x, points[points.length - 1].y);
     let arrow = executor.position.add(executor.direction.normalize(3 * cell_side));
     let part = executor.position.add(executor.direction.normalize(2.6 * cell_side));
@@ -285,6 +286,7 @@ function drawCircuit(canvasId, executor, cell_side=25) {
     contex.lineTo(right.x, right.y);
     contex.stroke();
     contex.beginPath();
+    contex.lineWidth = 3;
     contex.strokeStyle = "#1f5713";
     contex.fillStyle = "#249f24";
     contex.arc(points[points.length - 1].x, points[points.length - 1].y, 10, 0, 2 * Math.PI);
